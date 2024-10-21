@@ -458,6 +458,74 @@ Module Module1
 
 #End Region
 
+#Region "Exceptions"
+
+        Console.WriteLine(">>>>>> Exceptions:")
+        ' Il existe 3 types d'erreurs possibles dans un code:
+        ' - Erreurs de compilation (syntaxe): sont détectées automatiquement par l'IDE
+        ' - Exception: sont des erreurs qui provoquent l'arrêt de l'application
+        ' - Code fonctionnel qui renvoie un résultat inattendu (faire de debuggage)
+
+        ' Pour éviter l'arrêt de l'application, on doit gérer l'exception
+        ' Pour gérer une exception, on utilise le bloc try/catch
+        ' Il existe plusieurs types d'exceptions, chacune d'elles porte le nom de l'erreur qu'elle génère.
+        ' Il existe aussi le type générique (anonyme) Exception
+
+        Dim n As Integer = 10
+
+        Console.WriteLine("Votre nombre: ")
+
+
+        Try
+            Dim nb As Integer = CInt(Console.ReadLine())
+            Console.WriteLine(n \ 0)
+
+        Catch ex As DivideByZeroException
+            Console.WriteLine("Exception gérée.....")
+
+        Catch ex1 As InvalidCastException
+            Console.WriteLine(ex1.Message)
+        End Try
+
+
+        Console.WriteLine(">> Type générique d'exception:")
+        'Obligation: une ressource (fichier, base de données....) doit être libérée à la fin de son 
+        ' utilisation
+
+        'Bonne pratique: prévoir un try/catch lors de la minipulation des ressources
+
+
+        Try
+            ' Ouverture d'un fichier en lecture
+            Console.WriteLine(n \ 1)
+            Dim nb As Integer = CInt(Console.ReadLine())
+
+
+        Catch ex As Exception
+            Console.WriteLine("Exception gérée.....")
+            Console.WriteLine(ex.Message)
+            Console.WriteLine(ex.StackTrace)
+
+
+        Finally
+            'Bloc optionnel qui s'exécute dans tous les cas exception ou pas
+            Console.WriteLine("Bloc finally.....")
+            ' Fermeture du fichier
+            ' Sert dans la pratique à libérer les ressources utilisées dans le try
+
+        End Try
+
+        Try
+            MesMethodes.Division(0)
+        Catch ex As Exception
+            ' Garder une trace dans fichier de logs
+            ' Garder une trace dans une table
+        End Try
+
+
+        Console.WriteLine("suite de l'application......")
+
+#End Region
 
 
 

@@ -140,4 +140,28 @@ Public Class MesMethodes
 
     End Function
 
+    ''' <summary>
+    ''' Méthode qui divise 10 par x
+    ''' </summary>
+    ''' <param name="x"></param>
+    ''' <exception cref="Exception">Si x = 0, renvoie une exception</exception>
+    Public Shared Sub Division(x As Integer)
+        'Option1: la méthode gère sa propre exception
+        'Try
+        '    Console.WriteLine(10 \ x)
+        'Catch ex As Exception
+        '    Console.WriteLine("Exception gérée dans la méthode")
+        'End Try
+
+        'Option2: faire une remontée d'exception -> c'est l'appelant qui doit gérer l'exception
+        If x <> 0 Then
+            Console.WriteLine(10 \ x)
+        Else
+            'Throw permet de délencher une exception
+            Throw New Exception("Attention! Division par 0")
+
+        End If
+
+    End Sub
+
 End Class
