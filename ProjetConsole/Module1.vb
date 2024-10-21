@@ -69,6 +69,179 @@ Module Module1
 
 #End Region
 
+#Region "Conversions de types"
+
+        Console.WriteLine(">>>> Conversion implicite:")
+        'Concerne le passage d'un type inférieur à un type supérieur
+
+        Dim myByte As Byte = 10
+        Dim monInt As Integer = myByte
+
+        Console.WriteLine(">>>> Conversion explicite:")
+        'Concerne le passage d'un supérieur à un type inférieur
+        ' La cast, la classe convert, la méthode Ctype
+        Dim monLong As Long = 10
+        Dim monShort As Short = CShort(monLong) 'risque de permet de donnée
+        'Cast: CInt, CDouble......
+
+        Dim monInt2 As Integer = Convert.ToInt32(monLong)
+
+        'Méthode Ctype: 
+        Dim myInt3 As Integer = CType("10", Integer)
+
+        'IsNumeric:
+        Console.WriteLine("IsNumeric: " & IsNumeric("10"))
+
+        Dim c As String = "a"
+        Dim monChar As Char = CChar(c)
+        Dim monChar1 As Char = "a"c ' autre syntaxe de conversion de string en char
+
+
+#End Region
+
+#Region "Formattage de chaines"
+
+        Console.WriteLine(">>>>> Formattage:")
+
+        'Concaténation:
+        Dim prenom As String = "Jean"
+        Dim ages As Integer = 50
+
+        Console.WriteLine("Prénom: " & prenom & " Age: " & ages)
+
+        'Interpolation:
+        'Version1:
+
+        Console.WriteLine("Prénom: {0} Age: {1}", prenom, ages)
+
+        'Version2: syntaxe simplifiée de version1:
+
+        Console.WriteLine($"Prénom: {prenom} Age: {ages}")
+        ' Entre accolades, on peut soit insérer des variables, soit des expressions
+
+        Console.WriteLine($"Expression: {5 + 6}")
+
+
+#End Region
+
+#Region "Opérateurs"
+
+        Console.WriteLine(">>>>>> Opérateurs:")
+        'Opérateurs arithmétiques: + - * / Mod
+        'Opérateurs combinés: += -= *= /= Mod= --> x += 1 équivalent x = x + 1
+        'Opérateurs logiques: and or not xor -> renvoient un boolean
+        'Opérateurs de comparaison: > >= < <= =(égalité) <> (différent) --> renvoient un boolean
+
+        Console.WriteLine(5 = 10)
+
+#End Region
+
+#Region "Bloc conditionnel"
+
+        Console.WriteLine(">>>>> Bloc conditionnel:")
+        'Est un ensemble d'instructions qui ne s'exécute qui si une condition est vraie
+
+        'if/elseif.../else
+
+        If myInt > 0 Then
+            Console.WriteLine("myInt positif")
+
+        ElseIf myInt < 0 Then
+            Console.WriteLine("myInt négatif")
+        Else
+            Console.WriteLine("myInt égale zéro")
+
+        End If
+
+        'Select case: est une variante du if/else qui permet de remplacer les elseif qui s'imbriquent
+
+        Dim note As Integer = 8
+
+        Select Case note
+            Case 1 To 5
+                Console.WriteLine("entre 1 et 5")
+
+            Case 6, 7, 8
+                Console.WriteLine("Egale a 6,7 ou 8")
+
+            Case Else
+                Console.WriteLine("Supérieure à 8")
+
+
+        End Select
+
+        'Opérateur ternaire: iif(condition, valeur si vraie, valeur si fausse): permet de faire 
+        ' des affectations conditionnelles
+
+        myInt = CInt(IIf(5 > 3, 3, 5))
+
+
+#End Region
+
+#Region "Blocs itératifs: boucles"
+
+        Console.WriteLine(">>>> Boucles:")
+        'for: si nombre d'itérations connues
+        'for each: permet de parcourir tous les éléments d'une collection
+        'while - Do Loop While - Do Loop Until: boucles conditionnelles
+
+
+        'For:
+
+        For Index As Integer = 1 To 5
+            Console.WriteLine($"Passage: {Index}")
+            If Index = 3 Then
+                Exit For
+
+            End If
+        Next
+
+        ' For Each:
+
+        Dim tab As Integer() = {1, 2, 3, 4}
+
+        For Each item As Integer In tab
+            Console.WriteLine(item)
+            If item = 2 Then
+                Exit For
+
+            End If
+        Next
+
+        'while:
+
+        Dim valeur As Integer = 1
+
+        While valeur < 5
+            Console.WriteLine($"Valeur = {valeur}")
+            valeur += 1
+            If valeur = 3 Then
+                Exit While
+            End If
+
+        End While
+
+        ' Do loop while
+
+        Do
+            Console.WriteLine($"Valeur = {valeur}")
+            valeur += 1
+            If valeur = 8 Then
+                Exit Do
+            End If
+
+        Loop While valeur < 10 ' Fait tant que la condition est vraie
+
+        ' Do Loop Until
+
+        Do
+            Console.WriteLine($"Valeur = {valeur}")
+            valeur += 1
+        Loop Until valeur > 15 ' Fait tant que condition est fausse
+
+
+#End Region
+
 
 
 
