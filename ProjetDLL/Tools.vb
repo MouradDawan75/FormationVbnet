@@ -74,7 +74,31 @@ Public Class Tools
     'Méthode qui récupère une précise à partir d'un fichier
 
     Public Shared Function LectureLigneFichier(chemin As String, numLigne As Integer) As String
-        '
+        Dim contenu As String = ""
+        Dim ligneEnCours = 0
+
+        If numLigne < 0 Then
+            Throw New Exception("Numéro de ligne doit être supérieur ou égale à 0...")
+        End If
+
+        If File.Exists(chemin) Then
+            Dim sr As New StreamReader(chemin)
+
+            While Not sr.EndOfStream() And ligneEnCours <= numLigne
+                contenu = sr.ReadLine()
+                ligneEnCours += 1
+            End While
+            If ligneEnCours < numLigne Then
+                Throw New Exception($"La ligne {numLigne} n'existe pas dans le fichier ")
+            End If
+
+
+        Else
+            Throw New Exception("Fichier introuvable...")
+        End If
+
+
+        Return contenu
     End Function
 
 End Class

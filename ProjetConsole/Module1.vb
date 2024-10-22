@@ -2,6 +2,8 @@
 Imports System.Text
 Imports System.Xml.Serialization
 Imports ProjetDLL
+Imports Serilog
+Imports Serilog.Core
 
 Module Module1
 
@@ -931,6 +933,66 @@ Module Module1
         sw.Close()
 
         Tools.EcritureFichier("C:\test\demo.txt", "contenu du fichier", modeAjout:=True)
+        Try
+            Dim content As String = Tools.LectureLigneFichier("C:\test\myFile.txt", 1)
+            Console.WriteLine(content)
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+        End Try
+
+
+#End Region
+
+#Region "Logging"
+
+        Console.WriteLine(">>>>> Logging:")
+        'Il y'à plusieurs types d'infos qu'on peut logguer dans fichier de logs:
+        ' info de debug: pour la partie dév.
+        ' infos générale non problèmatiques: suppression d'un produit, connexion d'un user....
+        ' Erreurs:
+        ' - warning: erreur mineure
+        ' - erroro: pour indiquer une erreur majeure
+        ' - fatale: pour indiquer l'arrêt du serveur
+        ' Il existe 5 niveaux de messages: debug -> info -> warning -> error -> fatal
+        '3 packages à installer via nuget
+        ' - serilog
+        ' - serilog.skins.files
+        ' - serilog.skins.console
+
+        '1- Mise en place d'une configuration
+        Dim config_logger As New LoggerConfiguration()
+        config_logger.MinimumLevel.Debug()
+        config_logger.WriteTo.Console()
+
+        '2- Créer un logger
+        Dim my_logger As Logger = config_logger.CreateLogger()
+
+        my_logger.Debug("Debug....")
+        my_logger.Information("info....")
+        my_logger.Warning("warning..")
+        my_logger.Error("Error....")
+        my_logger.Fatal("Fatal....")
+
+        ' Utilisation d'un fichier
+
+        Dim conf As New LoggerConfiguration()
+        conf.MinimumLevel.Information()
+        conf.WriteTo.File("C:\test\my_logs.txt", fileSizeLimitBytes:=20,
+                          retainedFileCountLimit:=5, rollOnFileSizeLimit:=True)
+
+        Dim file_logger As Logger = conf.CreateLogger()
+        For Index As Integer = 1 To 10
+            file_logger.Information($"Info.....{Index}")
+        Next
+
+        Dim vv As Integer = 10
+
+        Try
+            Console.WriteLine(vv \ 0)
+
+        Catch ex As Exception
+            file_logger.Error(ex.Message)
+        End Try
 
 #End Region
 
