@@ -1,4 +1,5 @@
-﻿Imports System.Xml.Serialization
+﻿Imports System.Text
+Imports System.Xml.Serialization
 Imports ProjetDLL
 
 Module Module1
@@ -631,6 +632,154 @@ Module Module1
         Console.WriteLine("Join:")
 
         Console.WriteLine(String.Join(" ", "Il", "est", 10, ":", 41))
+
+        Dim paragraphe As String = "Dawan test dawan test dawan."
+        Console.WriteLine(MesMethodes.NombreOccurrence("dawan", paragraphe))
+        Console.WriteLine(MesMethodes.VerifPalindrome("Sos"))
+
+        Console.WriteLine(">>>>>>> StringBuilder:")
+        'Contrairement au type String, le StringBuilder est muable
+        Dim str As StringBuilder = New StringBuilder()
+        str.Append("-"c, 10)
+        str.AppendLine()
+        str.Append("contenu de la chaine")
+        str.AppendLine()
+        str.Append("-"c, 10)
+        Console.WriteLine(str.ToString())
+
+        Console.WriteLine(">>>>>>>>>>>>>> Opérateur like: permet de valider le format d'une chaine")
+
+        Dim resultTest As Boolean
+
+        resultTest = "F" Like "F" ' True
+        resultTest = "F" Like "f" ' False
+        resultTest = "F" Like "FFF" ' False
+        resultTest = "aBBBa" Like "a*a" ' True - commence et se termine par a avec un nombre variable de caractères en les 2
+        resultTest = "a2a" Like "a#a" ' True - commence et se termine par a avec un seul nombre entre les 2 (single-digit)
+        resultTest = "F" Like "[A-Z]" ' True - chaine comprise dans un interval
+        resultTest = "F" Like "[!A-Z]" ' False - chaine non comprise dans un interval
+        resultTest = "aM5b" Like "[a[L-P]#[!c-e]]" ' True 
+        resultTest = "BAT123khg" Like "B?T*" ' True : commence par B suivie d'un seul caractère de n'importe que type, suivie d'un T, suivie d'un nombre variable de char de n'importe quel type
+
+#End Region
+
+#Region "Collections"
+
+        Console.WriteLine(">>>>>>>>>>>> Collections:")
+        ' Se sont des tableaux dynamiques classés en 2 catégories:
+        ' Collections de type Array (tableau): stockage ordonné
+
+        Console.WriteLine(">> Faiblement typée:")
+
+        Dim myTab As New ArrayList()
+
+        'Ajouts: Add, Insert
+
+        myTab.Add(10)
+        myTab.Add("test")
+        myTab.Add(True)
+        myTab.Insert(1, 10.5)
+
+        Console.WriteLine("Taille du tableau: " & myTab.Count)
+
+        ' Modifications:
+        myTab(0) = 100
+
+        ' Suppressions:
+
+        myTab.Remove("test")
+
+        Console.WriteLine("Parcourir un tableau dynamique:")
+
+        For Each elet As Object In myTab
+            Console.WriteLine(elet)
+        Next
+
+        Console.WriteLine(">> Fortement typée:")
+
+        Dim myList As New List(Of String)
+
+        myList.Add("test")
+        myList.Add("test1")
+        myList.Add("test2")
+
+        Console.WriteLine("myList contient test ? " & myList.Contains("test"))
+        Console.WriteLine("Index de test1: " & myList.IndexOf("test1")) ' 1
+        myList.Insert(1, "newTest")
+
+        ' Création d'une liste à partir du contenu d'un tableau
+        Dim numbers As New List(Of Integer) From {0, 1, 2, 3, 4}
+
+        ' Stack - Pile: Stockage LIFO Last In First Out
+
+        Dim pile As New Stack(Of String)
+        pile.Push("test1")
+        pile.Push("test2")
+        pile.Push("test3")
+
+        pile.Pop() ' supprime de dernier élément
+
+        Console.WriteLine("Pile contient test3 ? " & pile.Contains("test3")) ' False
+        Console.WriteLine("Prochain élément à supprimer: " & pile.Peek()) ' test2
+
+        ' Queue: stockage FIFO - Fisrt In First Out
+
+        Dim file As New Queue(Of String)
+        file.Enqueue("test1")
+        file.Enqueue("test2")
+        file.Enqueue("test3")
+
+        file.Dequeue() ' Supprime le premier élément
+
+        Console.WriteLine("file contient test1 ? " & file.Contains("test1"))
+        Console.WriteLine("Prochain élément à supprimer: " & file.Peek())
+
+        ' Collections de type mapping: fonctionnent par association clé:valeur
+        ' Dans une dictionnaire, le mot est la clé, sa définition est la valeur
+        Dim dictionnaire As New Dictionary(Of String, String)
+
+        dictionnaire.Add("user", "admin")
+        dictionnaire.Add("password", "@@test!!")
+
+        If dictionnaire.ContainsKey("user") Then
+            Console.WriteLine(dictionnaire.Item("user"))
+        Else
+            Console.WriteLine("Clé introuvable")
+        End If
+
+        Dim comptesCrediteurs As New List(Of CompteBancaire)
+        comptesCrediteurs.Add(New CompteBancaire("sdsqd155", 1500))
+        comptesCrediteurs.Add(New CompteBancaire("frty5203", 4500))
+        comptesCrediteurs.Add(New CompteBancaire("tyu458", 2569))
+
+        Dim comptesDebiteurs As New List(Of CompteBancaire)
+        comptesDebiteurs.Add(New CompteBancaire("<wx<wx145>", -1500))
+        comptesDebiteurs.Add(New CompteBancaire("sdfsdf15", -4500))
+        comptesDebiteurs.Add(New CompteBancaire("qsd589", -2569))
+
+        Dim dict As New Dictionary(Of String, List(Of CompteBancaire))
+        dict.Add("crediteurs", comptesCrediteurs)
+        dict.Add("debiteurs", comptesDebiteurs)
+
+        'Afficher les comptes créditeurs à partir du dict:
+
+        If dict.ContainsKey("crediteurs") Then
+            For Each cb As CompteBancaire In dict.Item("crediteurs")
+                Console.WriteLine(cb)
+            Next
+
+        End If
+
+        ' Un dictionnaire pour servir à classer des objets par catégorie, à gérer des params de conf.
+        ' Il peut servir à regrouper les caractéristques d'un objet
+        ' Exemple de gestion de caractéristiques d'un objet:
+
+        Dim userDict As New Dictionary(Of String, Object)
+        userDict.Add("nom", "DUPONT")
+        userDict.Add("prenom", "Jean")
+        userDict.Add("age", 60)
+        userDict.Add("telephones", {"06060606", "07070707"})
+
 
 
 

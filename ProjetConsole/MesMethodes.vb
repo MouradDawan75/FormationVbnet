@@ -166,10 +166,38 @@ Public Class MesMethodes
 
     ' Méthode qui renvoie le nombre de mots qui composent une chaine
 
+    Public Shared Function NombreMots(chaine As String) As Integer
+        Return chaine.Trim().Replace("  ", " ").Split(" "c).Length
+    End Function
+
     ' Méthode qui renvoie le nombre d'occurrences d'un mot dans un paragarphe
+
+    Public Shared Function NombreOccurrence(mot As String, paragraphe As String) As Integer
+        Dim cpt As Integer = 0
+        For Each x As String In paragraphe.Split(" "c, "."c, ":"c, "?"c, ";"c, "!"c)
+            If x.ToLower().Equals(mot.ToLower()) Then
+                cpt += 1
+            End If
+        Next
+        Return cpt
+    End Function
 
     ' Méthode qui renvoie la chaine inversée
 
+    Public Shared Function InverserChaine(chaine As String) As String
+        Dim chaineInversee As String = Nothing
+        For Index As Integer = chaine.Length - 1 To 0 Step -1
+            chaineInversee += chaine(Index)
+        Next
+
+        Return chaineInversee
+    End Function
+
     ' Méthode qui vérifie si une chaine est un palindrôme: sms, sos....
+
+    Public Shared Function VerifPalindrome(chaine As String) As Boolean
+        chaine = chaine.ToUpper()
+        Return chaine.Equals(InverserChaine(chaine))
+    End Function
 
 End Class
