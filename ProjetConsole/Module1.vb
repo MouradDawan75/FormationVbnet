@@ -1,8 +1,25 @@
-﻿Imports System.Text
+﻿Imports System.IO
+Imports System.Text
 Imports System.Xml.Serialization
 Imports ProjetDLL
 
 Module Module1
+
+    Structure Employe
+        Public Nom As String
+        Public Age As Integer
+
+        'Contrairement à une classe, une structure ne possède pas le constructeur sans params
+        ' Tous les attributs sont nécessaires car c'est un stockage de type valeur
+        Public Sub New(nom As String, age As Integer)
+            Me.Nom = nom
+            Me.Age = age
+        End Sub
+
+        Public Overrides Function ToString() As String
+            Return $"Nom: {Me.Nom} - Age: {Me.Age}"
+        End Function
+    End Structure
 
     Enum EtatProduit
         NEUF = 1
@@ -724,15 +741,15 @@ Module Module1
 
         ' Queue: stockage FIFO - Fisrt In First Out
 
-        Dim file As New Queue(Of String)
-        file.Enqueue("test1")
-        file.Enqueue("test2")
-        file.Enqueue("test3")
+        Dim fifo As New Queue(Of String)
+        fifo.Enqueue("test1")
+        fifo.Enqueue("test2")
+        fifo.Enqueue("test3")
 
-        file.Dequeue() ' Supprime le premier élément
+        fifo.Dequeue() ' Supprime le premier élément
 
-        Console.WriteLine("file contient test1 ? " & file.Contains("test1"))
-        Console.WriteLine("Prochain élément à supprimer: " & file.Peek())
+        Console.WriteLine("file contient test1 ? " & fifo.Contains("test1"))
+        Console.WriteLine("Prochain élément à supprimer: " & fifo.Peek())
 
         ' Collections de type mapping: fonctionnent par association clé:valeur
         ' Dans une dictionnaire, le mot est la clé, sa définition est la valeur
@@ -782,6 +799,138 @@ Module Module1
 
 
 
+
+#End Region
+
+#Region "Classe Date"
+
+        Console.WriteLine(">>>>>>>>>>> Classe Date:")
+        Console.WriteLine(">>> Date:")
+        'Création de dates:
+        Dim d1 As Date = Date.Now
+        Console.WriteLine("Date.Now: " & d1)
+
+        Dim d2 As Date = Date.Today
+        Console.WriteLine("Date.Today: " & d2)
+
+        Dim d3 As Date = New Date(2019, 11, 14, 15, 35, 45)
+        Console.WriteLine(d3)
+
+        Console.WriteLine("d3 plus 2 jours et demi: " & d3.AddDays(2.5))
+        Console.WriteLine(d3.Minute & "secondes")
+        Console.WriteLine(d3.Second & " minutes")
+
+        Console.WriteLine("Formattage de dates:")
+
+        Console.WriteLine(d3.ToLongDateString())
+        Console.WriteLine(d3.ToShortDateString())
+        Console.WriteLine(d3.ToLongTimeString())
+        Console.WriteLine(d3.ToShortTimeString())
+
+        'Utilisation d'un format personnalisé:
+
+        Dim format As String = "MMM ddd yyyy HH:mm"
+
+        'MMM : 3 première letres du mois
+        'ddd : 3 première lettres du jours
+        'hh : heure format 24h
+        'mm : minutes sur 2 positions
+        'yyy : année sur positions
+
+        Console.WriteLine(d3.ToString(format))
+
+
+
+#End Region
+
+#Region "Structure"
+
+        Console.WriteLine(">>>>>> Structure:")
+        Dim emp As New Employe("DUPONT", 45)
+
+        ' Le type structure est un type valeur (stocké dans la pile)
+        ' Le type classe est un type réference (stocké dans le tas)
+        ' L'héritage n'est pas possible pour le type Structure
+        ' Structure peut être pratique pour des petites applications.
+
+#End Region
+
+#Region "Fichiers"
+
+        Console.WriteLine(">>>>> Fichiers:")
+        ' .net fournit un certain nombre de classes permettant de manipuler les fichiers et les répertoires
+        ' Directory: pour les répertoires
+        ' File et FileInfo: ces 2 classes proposent les mm méthodes, elles d'instance dans FileInfo et Shared
+        ' dans File.
+        ' Pour les opérations de lecture/écriture: StreamReader - StreamWriter
+
+        'Création d'un rep:
+        Directory.CreateDirectory("rep") ' chemin relatif
+        Directory.CreateDirectory("c:\rep") ' chemin absolut
+
+        Console.WriteLine("Parcourir un rép:")
+
+        Dim files As String() = Directory.GetFiles("C:\test")
+        For Each f As String In files
+
+            Console.WriteLine(f)
+        Next
+
+        Console.WriteLine("Filter les fichiers d'un rép:")
+
+        For Each txtFile As String In Directory.GetFiles("C:\test", "*.txt")
+            Console.WriteLine(txtFile)
+        Next
+
+        Console.WriteLine("Filter les fichiers d'un rép en incluant les ous réps:")
+
+        For Each txtFile As String In Directory.GetFiles("C:\test", "*.txt", SearchOption.AllDirectories)
+            Console.WriteLine(txtFile)
+        Next
+
+        'File:
+
+        Dim cheminCopie As String = "C:\test\copie.txt"
+        'If Not File.Exists(cheminCopie) Then
+        '    File.Copy("C:\test\notes.txt", cheminCopie)
+        'Else
+        '    Console.WriteLine()
+        'End If
+
+        File.Copy("C:\test\notes.txt", cheminCopie, True)
+
+        'FileInfo:
+        Dim info As New FileInfo("C:\test\notes.txt")
+        Console.WriteLine("Date création: " & info.CreationTime)
+        Console.WriteLine("Date du dernier accès: " & info.LastAccessTime)
+        Console.WriteLine("Date de la dernière modif: " & info.LastWriteTime)
+        Console.WriteLine("Extension: " & info.Extension)
+
+
+
+        Tools.ControlAccess("C:\test\notes.txt")
+
+        Tools.AddFileSecurity("C:\test\notes.txt", "admin", Security.AccessControl.FileSystemRights.Read, Security.AccessControl.AccessControlType.Allow)
+        Tools.AddFileSecurity("C:\test\notes.txt", "admin", Security.AccessControl.FileSystemRights.Write, Security.AccessControl.AccessControlType.Allow)
+        Tools.AddFileSecurity("C:\test\notes.txt", "admin", Security.AccessControl.FileSystemRights.Write, Security.AccessControl.AccessControlType.Deny)
+
+        ' Stream (flux): sorte de canal intermédiaire entre une source et une destination
+        '1- Charger le fichier dans une flux en lecture/écriture
+        '2 - Exécution des opérations
+        '3- Fermeture du flux
+
+        Dim sr As New StreamReader("C:\test\notes.txt")
+        Dim contenu As String = sr.ReadToEnd()
+        sr.Close()
+
+        Console.WriteLine(contenu)
+
+        Dim sw As New StreamWriter("C:\test\new.txt", True)
+        sw.WriteLine()
+        sw.Write("contenu du fichier")
+        sw.Close()
+
+        Tools.EcritureFichier("C:\test\demo.txt", "contenu du fichier", modeAjout:=True)
 
 #End Region
 
