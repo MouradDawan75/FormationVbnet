@@ -164,4 +164,12 @@ Public Class MesMethodes
 
     End Sub
 
+    ' Méthode qui renvoie le nombre de mots qui composent une chaine
+
+    ' Méthode qui renvoie le nombre d'occurrences d'un mot dans un paragarphe
+
+    ' Méthode qui renvoie la chaine inversée
+
+    ' Méthode qui vérifie si une chaine est un palindrôme: sms, sos....
+
 End Class

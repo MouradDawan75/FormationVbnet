@@ -527,6 +527,114 @@ Module Module1
 
 #End Region
 
+#Region "Les classes"
+
+        Console.WriteLine(">>>>> Les classes:")
+        ' - Approche procédurale: repose sur l'utilisation de paramètres et de fonctions
+        ' - Approche objets: repose sur l'utilisation de classes et de modules
+        '  est une approche de résolution algorithmétique de problèmes permettant de produire des 
+        ' programmes modulaires.
+        ' Objectifs:
+        ' - Developper une partie de l'application sans qu'il soit nécessaire de connaitre les détails des autres
+        ' parties de l'application
+        ' - Apporter des modifications à un module sans que cla n'affècte le reste du programme
+        ' - Réutilisation des modules dans un autre cadre
+        ' Une classe est un type de donnée. Elle a pour tâche principale de décrire la structure d'un objet
+        ' Elle définie une sorte de template à partir duquel on crée nos objets.
+        ' Elle contient généralement, 3 choses:
+        ' - Attributs - Propriétés: représentent l'état de l'objet
+        ' - Méthodes: représentent le comprtement de l'objet
+        ' - Méthode spéciale publique qui porte le nom de la classe appelée constructeur permettant
+        ' d'instancier la classe en question.
+        ' Le rôle d'un constructeur est d'initialiser tous les attributs de l'objet
+
+        Dim u1 As Utilisateur = New Utilisateur() ' Nom = Nothing    Prenom = Nothing  Age = 0
+        Console.WriteLine($"Nom: {u1.Nom}")
+        Console.WriteLine($"Prénom: {u1.Prenom}")
+        Console.WriteLine($"Age: {u1.Age}")
+        Dim u2 As New Utilisateur("DUPONT", "Jean", 60)
+
+        u1.AfficherNom()
+        u2.AfficherNom()
+
+        Console.WriteLine(u2)
+
+        Dim u3 As New Utilisateur("DURAND", "Marie", 35)
+        Dim u4 As New Utilisateur("DURAND", "Marie", 45)
+
+        Console.WriteLine(u3.Equals(u4))
+
+        Console.WriteLine(Utilisateur.Profil)
+
+        Utilisateur.ChangerProfil("RH")
+
+        Dim cpte As New CompteBancaire("sdsq15", 1000)
+        cpte.Depot(500)
+        Try
+            cpte.Retrait(5550)
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+        End Try
+
+
+        Console.WriteLine(cpte)
+
+        Dim cpte1 As New CompteBancaire("145ddd", 500)
+        Dim cpte2 As New CompteBancaire("145ddd", 2500)
+
+        Console.WriteLine(cpte1.Equals(cpte2))
+
+
+
+
+
+
+
+#End Region
+
+#Region "Classe String"
+
+        Console.WriteLine(">>>>> Classe String:")
+        Dim st As String = "test"
+        'on peut instancier la classe String sans faire appel au constructeur - via une chaine littérale
+
+        st = st.ToUpper()
+        Console.WriteLine(st) ' les objets de type String sont immuables
+
+        Console.WriteLine(">>> Quelques méthodes de la classe String:")
+
+        Dim texte As String = " ceci est une chaine "
+
+        Console.WriteLine("texte contient ceci ? " & texte.Contains("ceci"))
+        Console.WriteLine("Remplacer une chaine par un texte: " & texte.Replace("une chaine", "un texte"))
+        Console.WriteLine("Majuscules: " & texte.ToUpper())
+        Console.WriteLine("Miniscules: " & texte.ToLower())
+        Console.WriteLine("Suppression des espaces de début et de fin de chaine: " & texte.Trim())
+        Console.WriteLine("texte commence par ceci ? " & texte.StartsWith("ceci"))
+        Console.WriteLine("texte se termine par chaine ? " & texte.EndsWith("chaine "))
+        Console.WriteLine("Premier char de texte: " & texte.ElementAt(0)) ' espace
+        Console.WriteLine("Premier char de texte: " & texte(0)) ' par définition, une chaine est un tableau de caractères
+        Console.WriteLine("Taille de texte: " & texte.Count())
+
+        Console.WriteLine("Sous chaine1 : " & texte.Substring(2))
+        Console.WriteLine("Sous chaine1 : " & texte.Substring(1, 4))
+
+        Console.WriteLine("Découpage d'une chaine:")
+
+        Dim chaineCSV As String = "toto;tata titi,tutu"
+
+        Dim mots() As String = chaineCSV.Split(";"c, " "c, ","c)
+        For Each mt As String In mots
+            Console.WriteLine(mt)
+        Next
+
+        Console.WriteLine("Join:")
+
+        Console.WriteLine(String.Join(" ", "Il", "est", 10, ":", 41))
+
+
+
+#End Region
 
 
         'Maintenir la console active
