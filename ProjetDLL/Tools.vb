@@ -74,7 +74,7 @@ Public Class Tools
     'Méthode qui récupère une précise à partir d'un fichier
 
     Public Shared Function LectureLigneFichier(chemin As String, numLigne As Integer) As String
-
+        '
     End Function
 
 End Class
