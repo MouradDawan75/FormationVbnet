@@ -1,4 +1,5 @@
-﻿Public Class CompteBancaire
+﻿<Serializable>
+Public Class CompteBancaire
 
 #Region "Attributs"
 

@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Reflection
 Imports System.Text
 Imports System.Xml.Serialization
 Imports ProjetDLL
@@ -993,6 +994,132 @@ Module Module1
         Catch ex As Exception
             file_logger.Error(ex.Message)
         End Try
+
+#End Region
+
+#Region "Sérialiation"
+
+        Console.WriteLine(">>>>> Sérialisation")
+        ' Mécanisme qui permet de sauvegarder l'état d'un objet dans un support physique de persistence (fichiers, BD...)
+        ' 3 types de sérialisations:
+        ' Binaire: classe BinaryFormatter
+        ' xml: classe XmlSerializer
+        ' json: classe DataContractJsonSerializer
+
+        Console.WriteLine("** Binaire:")
+        Dim comptes As New List(Of CompteBancaire)
+        comptes.Add(New CompteBancaire("qdqs45", 1500))
+        comptes.Add(New CompteBancaire("54548qq", 4500))
+
+        Tools.ExportBin("C:\test\comptes.bin", comptes)
+
+        For Each compte As CompteBancaire In Tools.ImportBin("C:\test\comptes.bin")
+            Console.WriteLine(compte)
+        Next
+
+        Console.WriteLine("*** Xml")
+
+        Tools.ExportXml("C:\test\comptes.xml", comptes)
+
+        For Each compte As CompteBancaire In Tools.ImportXml("C:\test\comptes.xml")
+            Console.WriteLine(compte)
+        Next
+
+        Console.WriteLine("*** JSON")
+
+        Tools.ExportJson("C:\test\comptes.json", comptes)
+
+        For Each compte As CompteBancaire In Tools.ImportJson("C:\test\comptes.json")
+            Console.WriteLine(compte)
+        Next
+
+        Console.WriteLine("*** CSV")
+
+        Tools.ExportCsv("C:\test\comptes.csv", comptes, ";")
+
+        For Each compte As CompteBancaire In Tools.ImportCsv("C:\test\comptes.csv", ";")
+            Console.WriteLine(compte)
+        Next
+
+
+
+#End Region
+
+#Region "Généricité"
+
+        ' mécanisme qui permet de définir des classes et des méthodes qui sont identiques sur le plan algorithmique
+        ' mais différents sur la base des types
+        'Intéret: optimisation du code
+
+        Dim myGeneric As New ClasseGenerique(Of String)
+        myGeneric.a = "a"
+        myGeneric.b = "b"
+
+        Dim myGen As New ClasseGenerique(Of Integer)
+        myGen.a = 10
+        myGen.b = 20
+
+        GenericTools.ExportBin(Of CompteBancaire)("C:\test\comptesGenerics.bin", comptes)
+
+        For Each compte As CompteBancaire In GenericTools.ImportBin(Of CompteBancaire)("C:\test\comptesGenerics.bin")
+            Console.WriteLine(compte)
+        Next
+
+#End Region
+
+#Region "Reflection - Introspection"
+
+        Console.WriteLine(">>>>>>>>>>>>>>> Reflection:")
+
+        'mécanisme qui permet de découvrir des types.
+
+        Dim typeSalarie As Type = GetType(Salarie)
+
+        Console.WriteLine(">>> Attributs:")
+
+        Dim props As FieldInfo() = typeSalarie.GetFields()
+
+        For Each p As FieldInfo In props
+            Console.WriteLine(p.Name)
+        Next
+
+        Console.WriteLine(">>> Méthodes:")
+
+        Dim methodes As MethodInfo() = typeSalarie.GetMethods()
+
+        For Each methode As MethodInfo In methodes
+            Console.WriteLine(methode.Name)
+        Next
+
+        'Instanciation dynamique de la classe Salarie
+
+        Dim s1 As Salarie = CType(Activator.CreateInstance(typeSalarie), Salarie) ' appel du constructeur sans paramètres
+
+        Dim s2 As Salarie = CType(Activator.CreateInstance(typeSalarie, "DUPONT", "Marc"), Salarie) ' appel du constructeur avec paramètres
+
+        ' Appel de méthodes dynamiquement:
+        Dim methodIdentite As MethodInfo = typeSalarie.GetMethod("Identite")
+
+        ' Méthode d'instance: on doit instancier la classe Salarie avec Activator
+        If methodIdentite.IsPublic Then
+
+            methodIdentite.Invoke(s2, Nothing)
+
+        Else
+            Console.WriteLine("Méthode privée...")
+
+        End If
+
+
+
+#End Region
+
+#Region "Bases de données"
+
+        ' Une application .net utilise le driver (connecteur) ADO.NET pour intéeragir avec une base de données.
+        ' C'est une DLL contenant les classes nécessaires pour se connecter et exécuter es différentes commandes SQL
+        ' Pour une base de données SQL Server, cette dll est fournie par .net c'est la ddl System.Data
+        ' Pour un autre type de base de données, on doit récupérer le driver ADO.NET via Nuget
 
 #End Region
 

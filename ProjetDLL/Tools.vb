@@ -1,7 +1,10 @@
 ﻿Imports System.IO
+Imports System.Runtime.Serialization.Formatters.Binary
+Imports System.Runtime.Serialization.Json
 Imports System.Security.AccessControl
 Imports System.Security.Principal
 Imports System.Text
+Imports System.Xml.Serialization
 
 Public Class Tools
 
@@ -99,6 +102,110 @@ Public Class Tools
 
 
         Return contenu
+    End Function
+
+    'Méthode de sérialisation bainaire
+
+    Public Shared Sub ExportBin(chemin As String, lst As List(Of CompteBancaire))
+
+        'Stream est une classe abstraite (MustInherit) non instanciable. Pour l'instancier
+        ' on doit utiliser une classe fille qui hérite de la classe abstraite
+        ' Touche F1 pour consulter la doc de microsoft et identifier les classes filles
+        Dim bin As New BinaryFormatter()
+
+        Dim flux As Stream = New FileStream(chemin, FileMode.Create) ' Create: si fichier inexistant -> il est généré
+        bin.Serialize(flux, lst)
+        flux.Close()
+    End Sub
+
+    ' Méthode de désérialisation binaire
+
+    Public Shared Function ImportBin(chemin As String) As List(Of CompteBancaire)
+
+        Dim lst As New List(Of CompteBancaire)
+        Dim bin As New BinaryFormatter()
+        Dim flux As Stream = New FileStream(chemin, FileMode.Open)
+        lst = bin.Deserialize(flux)
+        flux.Close()
+        Return lst
+
+    End Function
+
+    'Méthode de sérialisation XML - XmlSerializer
+    Public Shared Sub ExportXml(chemin As String, lst As List(Of CompteBancaire))
+
+        Dim xml As New XmlSerializer(lst.GetType())
+
+        Dim flux As Stream = New FileStream(chemin, FileMode.Create) ' Create: si fichier inexistant -> il est généré
+        xml.Serialize(flux, lst)
+        flux.Close()
+    End Sub
+
+
+    'Méthode de désérialisation XML
+
+    Public Shared Function ImportXml(chemin As String) As List(Of CompteBancaire)
+
+        Dim lst As New List(Of CompteBancaire)
+        Dim xml As New XmlSerializer(GetType(List(Of CompteBancaire)))
+        Dim flux As Stream = New FileStream(chemin, FileMode.Open)
+        lst = xml.Deserialize(flux)
+        flux.Close()
+        Return lst
+
+    End Function
+
+    'Méthode de sérialisation JSON - DataContractJsonSerializer
+
+    Public Shared Sub ExportJson(chemin As String, lst As List(Of CompteBancaire))
+
+        Dim json As New DataContractJsonSerializer(lst.GetType())
+
+        Dim flux As Stream = New FileStream(chemin, FileMode.Create) ' Create: si fichier inexistant -> il est généré
+        json.WriteObject(flux, lst)
+        flux.Close()
+    End Sub
+
+    'Méthode de désérialisation JSON
+
+    Public Shared Function ImportJson(chemin As String) As List(Of CompteBancaire)
+
+        Dim lst As New List(Of CompteBancaire)
+        Dim json As New DataContractJsonSerializer(lst.GetType())
+        Dim flux As Stream = New FileStream(chemin, FileMode.Open)
+        lst = json.ReadObject(flux)
+        flux.Close()
+        Return lst
+
+    End Function
+
+    'Méthode de sérialisation csv
+    Public Shared Sub ExportCsv(chemin As String, lst As List(Of CompteBancaire), separateur As String)
+        Dim sr As New StreamWriter(chemin)
+        For Each cpt As CompteBancaire In lst
+            sr.WriteLine(cpt.Numero & separateur & cpt.Solde)
+        Next
+        sr.Close()
+    End Sub
+
+    ' Méthode de désérialisation CSV
+    Public Shared Function ImportCsv(chemin As String, separateur As String) As List(Of CompteBancaire)
+        Dim lst As New List(Of CompteBancaire)
+        Dim sr As New StreamReader(chemin)
+
+        While Not sr.EndOfStream
+
+            'lire la ligne en cours
+            Dim ligne As String = sr.ReadLine()
+            Dim tab As String() = ligne.Split(separateur)
+            Dim cpt As New CompteBancaire(tab(0), Convert.ToDouble(tab(1)))
+            lst.Add(cpt)
+
+        End While
+
+        sr.Close()
+
+        Return lst
     End Function
 
 End Class
