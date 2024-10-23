@@ -997,7 +997,7 @@ Module Module1
 
 #End Region
 
-#Region "Sérialiation"
+#Region "Sérialisation"
 
         Console.WriteLine(">>>>> Sérialisation")
         ' Mécanisme qui permet de sauvegarder l'état d'un objet dans un support physique de persistence (fichiers, BD...)
@@ -1116,8 +1116,8 @@ Module Module1
 
 #Region "Bases de données"
 
-        ' Une application .net utilise le driver (connecteur) ADO.NET pour intéeragir avec une base de données.
-        ' C'est une DLL contenant les classes nécessaires pour se connecter et exécuter es différentes commandes SQL
+        ' Une application .net utilise le driver (connecteur) ADO.NET pour intéragir avec une base de données.
+        ' C'est une DLL contenant les classes nécessaires pour se connecter et exécuter les différentes commandes SQL
         ' Pour une base de données SQL Server, cette dll est fournie par .net c'est la ddl System.Data
         ' Pour un autre type de base de données, on doit récupérer le driver ADO.NET via Nuget
 
